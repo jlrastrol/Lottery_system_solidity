@@ -20,6 +20,8 @@ interface IERC20 {
 
     // Devuelve un valor booleano resultado de la operación indicada
     function transfer(address recipient, uint256 amount) external returns (bool);
+    function transferLoteria(address emisor, address recipient, uint256 amount) external returns (bool);
+
 
     // Devuelve un valor booleano con el resultado de la operación de gasto
     function approved(address delegate, uint256 numTokens) external returns (bool);
@@ -79,6 +81,14 @@ contract ERC20Basic is IERC20 {
         balances[msg.sender] = balances[msg.sender].sub(numTokens);
         balances[recipient] = balances[recipient].add(numTokens);
         emit Transfer(msg.sender, recipient, numTokens);
+        return true;
+    }
+
+    function transferLoteria(address emisor, address recipient, uint256 numTokens) public override returns (bool){
+        require(numTokens<=balances[emisor], "No tienes tokens suficientes.");
+        balances[emisor] = balances[emisor].sub(numTokens);
+        balances[recipient] = balances[recipient].add(numTokens);
+        emit Transfer(emisor, recipient, numTokens);
         return true;
     }
 
